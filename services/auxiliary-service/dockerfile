@@ -1,0 +1,27 @@
+# Use official Node.js Alpine image (small size)
+# Alpine Linux is extremely lightweight (~5MB base)
+FROM node:20-alpine
+
+# Set working directory inside container
+WORKDIR /app
+
+# Copy package files first (for layer caching)
+COPY package*.json ./
+
+# Install dependencies why npm ci?
+# npm ci is faster than npm install because it only installs the dependencies that are listed in the package.json file.
+# npm install installs all dependencies, including dev dependencies, which is not what we want for a production environment.
+RUN npm ci --only=production 
+
+# Copy application code
+COPY . .
+
+# Expose port
+EXPOSE 3001
+
+# Set environment variables
+ENV NODE_ENV=production
+ENV PORT=3001
+
+# Start application
+CMD ["node", "index.js"]

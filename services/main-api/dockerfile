@@ -1,0 +1,15 @@
+FROM node:20-alpine 
+WORKDIR /app
+COPY package*.json ./ 
+RUN npm ci --only=production
+COPY . . 
+EXPOSE 3000 
+ENV NODE_ENV=production 
+ENV PORT=3000 
+CMD ["node", "index.js"]
+# Alpine Linux is extremely lightweight (~5MB base)
+# Copy package files first (for layer caching)
+# Copy application code
+# Expose port 3000 why? because we want to expose the port to the outside world
+# Set environment variable for production environment why? because we want to run the application in production environment
+# Set environment variable for port why? because we want to run the application on port 3000
